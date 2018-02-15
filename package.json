@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "react": "^16.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^6.1.0",

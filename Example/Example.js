@@ -1,6 +1,6 @@
 import React from 'react';
-import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
-import Camera from 'react-native-camera';
+import { Image, StatusBar, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import RNCamera from 'react-native-camera';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,11 +56,11 @@ export default class Example extends React.Component {
 
     this.state = {
       camera: {
-        aspect: Camera.constants.Aspect.fill,
-        captureTarget: Camera.constants.CaptureTarget.cameraRoll,
-        type: Camera.constants.Type.back,
-        orientation: Camera.constants.Orientation.auto,
-        flashMode: Camera.constants.FlashMode.auto,
+        aspect: RNCamera.constants.Aspect.fill,
+        captureTarget: RNCamera.constants.CaptureTarget.cameraRoll,
+        type: RNCamera.constants.Type.back,
+        orientation: RNCamera.constants.Orientation.auto,
+        flashMode: RNCamera.constants.FlashMode.auto,
       },
       isRecording: false,
     };
@@ -69,7 +69,7 @@ export default class Example extends React.Component {
   takePicture = () => {
     if (this.camera) {
       this.camera
-        .capture()
+        .capture({ base64: true })
         .then(data => console.log(data))
         .catch(err => console.error(err));
     }
@@ -78,7 +78,7 @@ export default class Example extends React.Component {
   startRecording = () => {
     if (this.camera) {
       this.camera
-        .capture({ mode: Camera.constants.CaptureMode.video })
+        .capture({ mode: RNCamera.constants.CaptureMode.video })
         .then(data => console.log(data))
         .catch(err => console.error(err));
       this.setState({
@@ -98,7 +98,7 @@ export default class Example extends React.Component {
 
   switchType = () => {
     let newType;
-    const { back, front } = Camera.constants.Type;
+    const { back, front } = RNCamera.constants.Type;
 
     if (this.state.camera.type === back) {
       newType = front;
@@ -116,7 +116,7 @@ export default class Example extends React.Component {
 
   get typeIcon() {
     let icon;
-    const { back, front } = Camera.constants.Type;
+    const { back, front } = RNCamera.constants.Type;
 
     if (this.state.camera.type === back) {
       icon = require('./assets/ic_camera_rear_white.png');
@@ -129,7 +129,7 @@ export default class Example extends React.Component {
 
   switchFlash = () => {
     let newFlashMode;
-    const { auto, on, off } = Camera.constants.FlashMode;
+    const { auto, on, off } = RNCamera.constants.FlashMode;
 
     if (this.state.camera.flashMode === auto) {
       newFlashMode = on;
@@ -149,7 +149,7 @@ export default class Example extends React.Component {
 
   get flashIcon() {
     let icon;
-    const { auto, on, off } = Camera.constants.FlashMode;
+    const { auto, on, off } = RNCamera.constants.FlashMode;
 
     if (this.state.camera.flashMode === auto) {
       icon = require('./assets/ic_flash_auto_white.png');
@@ -166,7 +166,7 @@ export default class Example extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar animated hidden />
-        <Camera
+        <RNCamera
           ref={cam => {
             this.camera = cam;
           }}
@@ -177,7 +177,6 @@ export default class Example extends React.Component {
           flashMode={this.state.camera.flashMode}
           onFocusChanged={() => {}}
           onZoomChanged={() => {}}
-          defaultTouchToFocus
           mirrorImage={false}
           cropToPreview={false}
           permissionDialogTitle="Sample title"
@@ -190,6 +189,9 @@ export default class Example extends React.Component {
           <TouchableOpacity style={styles.flashButton} onPress={this.switchFlash}>
             <Image source={this.flashIcon} />
           </TouchableOpacity>
+        </View>
+        <View style={[styles.overlay]}>
+          <Text>Hello world</Text>
         </View>
         <View style={[styles.overlay, styles.bottomOverlay]}>
           {(!this.state.isRecording && (
